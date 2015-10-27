@@ -5,9 +5,9 @@ class dl_rapidgator_net extends Download {
 	public function CheckAcc($cookie){
 		$data = $this->lib->curl("http://rapidgator.net/profile/index", "lang=en;{$cookie}", "");
 		if(stristr($data, '<a href="/article/premium">Free</a>')) return array(false, "accfree");
-		elseif(stristr($data, 'Premium till')) {
-			$oob = $this->lib->curl("http://rapidgator.net/file/79674811", "lang=en;{$cookie}", "");
-			if(stristr($oob, 'You have reached quota of downloaded information')) return array(true, "Until ".$this->lib->cut_str($data, 'Premium till','<span'). "<br> Account out of BW");
+		elseif(stristr($data, '<a href="/article/premium">Premium</a>')) {
+			$oob = $this->lib->curl("http://rapidgator.net/file/8a4d52c6d85f99ad22feab9f39dcc892", "lang=en;{$cookie}", "");
+			if(stristr($oob, 'You have reached quota of downloaded information')) return array(true, "Until ".$this->lib->cut_str($data, 'Premium till','<span'). $cookie."<br> Account out of BW");
 			else return array(true, "Until ".$this->lib->cut_str($data, 'Premium till','<span')." <br/>Bandwith available:" .$this->lib->cut_str($this->lib->cut_str($data, 'Bandwith available</td>','<div style='), '<td>','</br>'));
 		}
 		else return array(false, "accinvalid");
@@ -16,6 +16,7 @@ class dl_rapidgator_net extends Download {
 	public function Login($user, $pass){
 		$data = $this->lib->curl("https://rapidgator.net/auth/login", "lang=en", "LoginForm[email]={$user}&LoginForm[password]={$pass}&LoginForm[rememberMe]=1");
 		$cookie = "lang=en;".$this->lib->GetCookies($data);
+		echo($cookie);
 		return $cookie;
 	}
 	
