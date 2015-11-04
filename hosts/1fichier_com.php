@@ -4,7 +4,6 @@ class dl_1fichier_com extends Download {
 	
 	public function CheckAcc($cookie){
 		$data = $this->lib->curl("https://1fichier.com/console/abo.pl", $cookie, "");
-		file_put_contents("test.txt",$data);
 		if(stristr($data, "Your account is already Premium.")) return array(true, $this->lib->cut_str($data, "Your subscription will end the ","."));
 		elseif(stristr($data, "You must be registered and logged in before subscribing")) return array(false, "accinvalid");
 			else return array(false, "accfree");
