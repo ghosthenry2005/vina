@@ -5,7 +5,7 @@ class dl_filesmonster_com extends Download {
 	public function CheckAcc($cookie){
 		$data = $this->lib->curl("http://filesmonster.com/", "yab_ulang=en;".$cookie, "");
 		if(stristr($data, 'Your membership type: <span class="em lightblack">Registered')) return array(false, "accfree");
-		elseif(stristr($data, 'Your membership type: <span class="em lightblack">Premium') && !stristr($data, '>Expired:')) return array(true, "Until ".$this->lib->cut_str($data, '<span>Valid until: <span class=\'green\'>','</span><br /><input type='));
+		elseif(stristr($data, 'Your membership type: <strong>Premium</strong>') && !stristr($data, '>Expired:')) return array(true, "Until ".$this->lib->cut_str($data, "Valid until: <span class='em-success'>","</span></p><p><inp"));
 		elseif(stristr($data, "class='red em'>Expired:")) return array(false, "Account Expired!");
 		else return array(false, "accinvalid");
 	}
