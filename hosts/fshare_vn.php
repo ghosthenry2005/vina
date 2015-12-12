@@ -1,5 +1,5 @@
 <?php
- 
+/* Updated by LTT [06/06/2015] */
 class dl_fshare_vn extends Download {
      
     public function CheckAcc($cookie){
@@ -14,7 +14,7 @@ class dl_fshare_vn extends Download {
         $page = $this->lib->curl("https://www.fshare.vn/login", "", "");
         $token = $this->lib->cut_str($page, 'hidden" value="', '"');
         $data = $this->lib->curl("https://www.fshare.vn/login", $this->lib->GetCookies($page), "fs_csrf={$token}&LoginForm[email]={$user}&LoginForm[password]={$pass}&LoginForm[rememberMe]=0&yt2=%C4%90%C4%83ng+nh%E1%BA%ADp");
-        $cookie = $this->lib->GetCookies($data);
+		$cookie = $this->lib->GetCookies($data);
         return $cookie;
     }
      
@@ -22,7 +22,7 @@ class dl_fshare_vn extends Download {
         $url = str_replace('http://', 'https://', $url);
         list($url, $pass) = $this->linkpassword($url);  
         $data = $this->lib->curl($url, $this->lib->cookie, "");
-        $token = $this->lib->cut_str($data, "fs_csrf: '", "'");
+		if (preg_match('/<input type="hidden" value="(.*?)" name="fs_csrf"/', $data, $match)) $token = $match[1];
         if($pass) {
             $post = $this->parseForm($this->lib->cut_str($data, '<form id="', '</form>'));
             $post["FilePwdForm[pwd]"] = $pass;
@@ -42,15 +42,17 @@ class dl_fshare_vn extends Download {
         elseif(stristr($data,"filepwd-form"))   $this->error("reportpass", true, false);
         elseif(preg_match('@https?:\/\/download-?(\w+\.)?fshare\.vn\/dl\/[^"\'><\r\n\t]+@i', $data, $match)) return trim($match[0]);
         else{
-            $page = $this->lib->curl('https://www.fshare.vn/download/index', $this->lib->cookie, "speed=fast&fs_csrf={$token}", 0, 0, $url);
-            $json = json_decode($page, true);
-            if ($json["url"]) return $json["url"];
+			$k = 0;
+			while ($k < 5) {
+				$page = $this->lib->curl('https://www.fshare.vn/download/get', $this->lib->cookie, "fs_csrf={$token}&DownloadForm%5Bpwd%5D=&ajax=download-form", 0, 0, $url);
+				$json = json_decode($page, true);
+				if ($json["url"]) return $json["url"];
+			}
         }
         return false;
     }
      
 }
- 
 /*
 * Open Source Project
 * Vinaget by ..::[H]::..
