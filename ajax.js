@@ -191,7 +191,7 @@ function donate(obj){
 			url: "add.php?rand="+ Math.random(),
 			data: "type="+$("#type").val()+"&accounts="+account,
 			success: function(html) {
-				if(html == 'true') {
+				if(/true$/.test(html)) {
                     $("#wait").html('');
 					$('#accounts').val("");
 					$("#wait").fadeOut(1100, 'swing');
@@ -359,3 +359,28 @@ $('#copytext').click(function(){
 		$("#report").text("Copied text to clipboard").show().fadeOut(3000); 
 	});
 });
+
+// load clipboardjs before to prevent error
+$.holdReady( true );
+$.getScript( "https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.3/clipboard.min.js", function() {
+	$.holdReady( false );
+});
+
+$(document).ready(function() {
+	var clipboard = new Clipboard('#copytext2', {
+		text: function(trigger, bb) {
+			bb = '';
+			$("input[name*='176']").each(function () {
+				bb += $(this).val();
+			});
+			return bb;
+		}
+	});
+	clipboard.on('success', function(e) {
+		$("#report2").text("Copied text to clipboard").show().fadeOut(3000);
+	});
+	clipboard.on('error', function(e) {
+		$("#report2").text("Failed to copy").show().fadeOut(3000);
+	});
+});
+
