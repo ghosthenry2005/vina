@@ -170,6 +170,8 @@
 							</form><BR><BR>
 							<div id="dlhere" align="left" style="display: none;">
 								<BR><hr /><small style="color:#55bbff"><?php printf($obj->lang['dlhere']); ?></small>
+								<input type='button' id="copytext2" value="Copy BB To Clipboard"/>
+								<font id="report2" align="right" style="color:#FF6600"></font>
 								<div align="right"><a onclick="return bbcode('bbcode');" href="javascript:void(0)" style='TEXT-DECORATION: none'><font color=#FF6600>BB code</font></a>&nbsp;&nbsp;&nbsp;
 								<a onclick="return makelist(document.getElementById('showresults').innerHTML);" href="javascript:void(0)" style='TEXT-DECORATION: none'><font color=#FF6600>Make List</font></a></div>
 							</div>
