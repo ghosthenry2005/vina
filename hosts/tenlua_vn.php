@@ -12,11 +12,28 @@ class dl_tenlua_vn extends Download {
             else return array(true, "Gold Member. <br> Until ".$info[0]['endGold']);          
         }
     }
+
+    public function GetCookies($content)
+    {
+        preg_match_all('/Set-cookie: (.*);/Ui',$content,$temp);
+        $cookie = $temp[1];
+        $cookies = "";
+        $a = array();
+        foreach($cookie as $c){
+            $pos = strpos($c, "=");
+            $key = substr($c, 0, $pos);
+            $val = substr($c, $pos+1);
+            $a[$key] = $val;
+        }
+        foreach($a as $b => $c){
+            $cookies .= "{$b}={$c}; ";
+        }
+        return $cookies;
+    }
  
     public function Login($user, $pass){
-        $data = $this->lib->curl('http://api2.tenlua.vn/','','[{"a":"user_login","user":"'.$user.'","password":"'.$pass.'","permanent":false}]',0);
-        $invo = @json_decode($data);
-        $cookie = $invo[0];
+        $data = $this->lib->curl('http://api2.tenlua.vn/','','[{"a":"user_login","user":"'.$user.'","password":"'.$pass.'","permanent":false}]',-1);
+        $cookie = "path='/';".$this->GetCookies($data);
         return $cookie;
     }
      
@@ -24,13 +41,13 @@ class dl_tenlua_vn extends Download {
         $gach = explode('/', $url);
         $id = $gach[4];
         $seqno = mt_rand();
-        $data = $this->lib->curl('http://api2.tenlua.vn/?sid='.$this->lib->cookie, '','[{"a":"filemanager_builddownload_getinfo","n":"'.$id.'","r":'.$seqno.'}]',0);
+        $data = $this->lib->curl('http://api2.tenlua.vn/', $this->lib->cookie,'[{"a":"filemanager_builddownload_getinfo","n":"'.$id.'","r":'.$seqno.'}]',0);
         $zess = @json_decode($data);
         if ($zess[0]->type == 'none') $this->error("dead", true, false, 2);
         else {
-            $z = $zess[0]->url;
-            $zes= $this->lib->curl($z,'','');
-            if(preg_match('/ocation: *(.*)/i', $zes, $redir)){
+            $z = $zess[0]->dlink;
+            $zes= $this->lib->curl($z,$this->lib->cookie,'', -1);
+            if(preg_match('#location:\s*(.+?)\s#i', $zes, $redir)){
                 $link = trim($redir[1]);
                 return $link;
             }
