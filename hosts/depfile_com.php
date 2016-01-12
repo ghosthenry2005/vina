@@ -4,7 +4,7 @@ class dl_depfile_com extends Download {
     
     public function CheckAcc($cookie){
         $data = $this->lib->curl("https://depfile.com/", "sdlanguageid=2;{$cookie}", "");
-        if(stristr($data, '>Premium: <a class=')) return array(true, "Until ".$this->lib->cut_str($data, "premium'>", '</a></div>'));
+        if(stristr($data, "title='Premium'")) return array(true, "Until ".$this->lib->cut_str($data, "/myspace/space/premium'>", "<img src='/images/i_premium.png'"));
 		else return array(false, "accinvalid");
     }
     
@@ -19,8 +19,10 @@ class dl_depfile_com extends Download {
 			$url = str_replace('http', 'https', $url);
 		}
 		$data = $this->lib->curl($url, $this->lib->cookie, "");
+		$myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
+		fwrite($myfile, $data);
         if(stristr($data,'Page Not Found!') || stristr($data,'File was not found in the') || stristr($data,'Provided link contains errors')) $this->error("dead", true, false, 2);
-		elseif(preg_match('@https?:\/\/[a-z]+\.depfile\.com\/premdw\/\d+\/[a-z0-9]+\/[^"\'<>\r\n\t]+@i', $data, $giay)) 
+		elseif(preg_match('@https?:\/\/[a-z]+\.depcloud\.com\/premdw\/\d+\/[a-z0-9]+\/[^"\'<>\r\n\t]+@i', $data, $giay)) 
 		return trim($giay[0]);
 		return false;
     }
