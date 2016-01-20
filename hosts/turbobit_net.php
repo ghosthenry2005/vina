@@ -1,21 +1,22 @@
 <?php
 
 class dl_turbobit_net extends Download {
-	/*
     public function CheckAcc($cookie) {
         $data = $this->lib->curl("http://turbobit.net", "user_lang=en;".$cookie, "");
-        if (stristr($data, '<u>Turbo Access</u> to')) {
-			$bw = $this->lib->curl("http://turbobit.net/jy23sro5uer6.html", "user_lang=en;".$cookie, "");
-			if(stristr($bw, '> limit of premium downloads'))   return array(true, "LimitAcc");
-			else return array(true, "Until ".$this->lib->cut_str($data, '<u>Turbo Access</u> to','</div>'));
+        if (stristr($data, '>Turbo access till')) {
+                        $bw = $this->lib->curl("http://turbobit.net/jy23sro5uer6.html", "user_lang=en;".$cookie, "");
+                        if(stristr($bw, '> limit of premium downloads'))   return array(true, "LimitAcc");
+                        else return array(true, "Until ".$this->lib->cut_str($data, '>Turbo access till ','</span><a'));
         }
-		else if(stristr($data, '<u>Turbo Access</u> denied.')) return array(false, "accfree");
-		else return array(false, "accinvalid");
-    }
-    */   
+                else if(stristr($data, '<u>Turbo Access</u> denied.')) return array(false, "accfree");
+                else return array(false, "accinvalid");
+    }  
     public function Login($user, $pass){
         $data = $this->lib->curl("http://turbobit.net/user/login", "user_lang=en", "user[login]=".urlencode($user)."&user[pass]=".urlencode($pass)."&user[memory]=1&user[submit]=Login");
         $cookie = "user_lang=en;".$this->lib->GetCookies($data);
+        $file = fopen("bump.html","w");
+		echo fwrite($file,$data);
+		fclose($file);
         return $cookie;
     }
          
