@@ -14,9 +14,6 @@ class dl_turbobit_net extends Download {
     public function Login($user, $pass){
         $data = $this->lib->curl("http://turbobit.net/user/login", "user_lang=en", "user[login]=".urlencode($user)."&user[pass]=".urlencode($pass)."&user[memory]=1&user[submit]=Login");
         $cookie = "user_lang=en;".$this->lib->GetCookies($data);
-        $file = fopen("bump.html","w");
-		echo fwrite($file,$data);
-		fclose($file);
         return $cookie;
     }
          
