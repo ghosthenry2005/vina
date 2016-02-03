@@ -16,7 +16,7 @@ class dl_1fichier_com extends Download {
 	}
 	
 	public function Leech($url) {
-		$data = $this->lib->curl($url, $this->lib->cookie, "");
+		$data = $this->lib->curl($url, $this->lib->cookie, "did=0");
 		if(stristr($data, "The requested file could not be found")) $this->error("dead", true, false, 2);
 		elseif($this->isredirect($data)) return trim($this->redirect);
 		return false;
