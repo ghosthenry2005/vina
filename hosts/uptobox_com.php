@@ -8,7 +8,7 @@ class dl_uptobox_com extends Download {
 		else return array(false, "accinvalid");
     }
     public function Login($user, $pass){
-		$data = $this->lib->curl("https://login.uptobox.com/", "lang=english", "op=login&login={$user}&password={$pass}&redirect=");
+		$data = $this->lib->curl("https://login.uptobox.com/logarithme", "lang=english", "op=login&login={$user}&password={$pass}&redirect=");
 		$cookie = "lang=english;{$this->lib->GetCookies($data)}";
 		return $cookie;
     }
