@@ -30,6 +30,7 @@ How to use
 Requreiments
 ------------
  - PHP Curl module
+
 Features
 --------
 - Admin Panel
