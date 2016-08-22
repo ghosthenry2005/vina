@@ -27,6 +27,9 @@ How to use
 - CHMOD file "data/log.txt" to 666.
 - Password default: admin
 
+Requreiments
+------------
+ - PHP Curl module
 Features
 --------
 - Admin Panel
